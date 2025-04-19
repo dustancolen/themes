@@ -1,0 +1,55 @@
+{%- assign valor_minimo = 200.00 -%}
+{%- assign valor_total_carrinho = cart.total_price | divided_by: 100 -%}
+{%- assign progress = valor_total_carrinho | times: 100 | divided_by: valor_minimo -%}
+
+<style>
+  @media screen and (min-width: 741px){
+    .shipping-bar {
+      position: relative;
+      width: 90%;
+      height: 10px;
+      background-color: #fff;
+      border: solid 2px #000;
+      border-radius: 50px;
+      margin-bottom: 50px;
+    }
+  }
+  @media screen and (max-width: 740px){
+    .shipping-bar {
+      position: relative;
+      width: 100%;
+      height: 10px;
+      background-color: #fff;
+      border: solid 2px #000;
+      border-radius: 50px;
+      margin-bottom: 50px;
+    }
+  }
+  .shipping-bar__fill {
+    width: {{ progress }}%;
+    max-width: 100%;
+    height: 100%;
+    background-color: #000; 
+    transition: width 3s ease-in-out; 
+    display:block!important; 
+  }
+
+  .shipping-bar__text {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #000;
+    width: 100%;
+  }
+</style>
+
+<free-shipping-bar threshold="{{ valor_minimo }}" class="shipping-bar">
+  <div class="shipping-bar__fill"></div>
+  {%- if valor_total_carrinho >= valor_minimo -%}
+    <span class="shipping-bar__text">Parabéns, você ganhou Frete Grátis</span>
+  {%- else -%}
+    {%- assign valor_restante = valor_minimo | minus: valor_total_carrinho -%}
+    <span class="shipping-bar__text">Falta R$ {{ valor_restante }}0 para obter frete grátis.</span>
+  {%- endif -%}
+</free-shipping-bar>
